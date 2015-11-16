@@ -1,0 +1,33 @@
+---
+title: Unknown - API
+layout: "layout-blank"
+---
+
+<?php
+
+    date_default_timezone_set("Asia/Bangkok");
+
+    require_once './packages/autoload.php';
+
+    $dsn = "pgsql:dbname=unknown;host=localhost";
+    $username = "postgres";
+    $password = "gisonline2";
+    $pdo = new PDO($dsn, $username, $password);
+    $db = new NotORM($pdo);
+
+
+	$app = new \Slim\Slim();
+
+
+	/* Test manager */
+    $app->get('/hello/:name',function($name) use ($app) { 
+        getHello($app, $name); 
+    });
+
+	$app->run();
+
+
+	/* Test Partial */
+    <%= partial "/Test/_getHello" %>
+
+?>
