@@ -1,0 +1,67 @@
+/**
+ *
+ * @apiName ElectricMonth
+ * @apiGroup Electric Service
+ * @apiVersion 0.1.0
+ *
+ * @api {get} /electricManager/electricMonth/ Electric Month Service
+ * @apiDescription คำอธิบาย : ในส่วนนี้แสดงรายงานการใช้ไฟฟ้ารายเดือน
+ *
+ *
+ * @apiSampleRequest /electricManager/electricMonth/
+ *
+ * @apiSuccess {String} msg แสดงข้อความทักทายผู้ใช้งาน
+ *
+ * @apiSuccessExample Example data on success:
+ * {
+ *   "msg": "Hello, anusorn"
+ * }
+ *
+ * @apiError UserNotFound The <code>id</code> of the User was not found.
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "UserNotFound"
+ *     }
+ *
+ */
+ 
+ function electricMonth($app, $pdo, $db) {
+
+	/* ************************* */
+    /* เริ่มกระบวนการเชื่อมต่อกับฐานข้อมูล PostgreSQL */
+    /* ************************* */
+ 	$reports = array();
+
+ 	$results = $db->electric_m->order("year ASC");
+
+ 	foreach ($results as $result) {
+
+ 		$reports[] = array(
+ 			"year" => $result["year"],
+ 			"month" => $result["month"],
+ 			"station" => $result["station"],
+            "rawwater" => $result["rawwater"],
+            "jaywater" => $result["jaywater"],
+            "electric_kwh" => $result["electric_kwh"],
+            "electric_cost" => $result["electric_cost"]
+ 		);
+
+ 	}
+
+	$rowCount = count($results);
+
+    /* ************************* */
+    /* เริ่มกระบวนการส่งค่ากลับ */
+    /* ************************* */
+    $resultText = "success";
+
+    $reportResult = array("result" =>  $resultText, "count"=>$rowCount, "rows" => $reports);
+
+    $app->response()->header("Content-Type", "application/json");
+    echo json_encode($reportResult);
+
+
+ 	// $return_m = array("msg" => "Hello, Josh");
+ 	// echo json_encode($return_m);
+ }
